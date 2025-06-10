@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (sidebarToggle) {
     sidebarToggle.addEventListener('click', function() {
+      if (!sidebar || !mobileOverlay) return;
       sidebar.classList.toggle('active');
       mobileOverlay.classList.toggle('active');
       document.body.classList.toggle('sidebar-open');
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (mobileOverlay) {
     mobileOverlay.addEventListener('click', function() {
+      if (!sidebar) return;
       sidebar.classList.remove('active');
       mobileOverlay.classList.remove('active');
       document.body.classList.remove('sidebar-open');
@@ -25,22 +27,25 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (mobileMenuBtn) {
     mobileMenuBtn.addEventListener('click', function() {
+      if (!sidebar || !mobileOverlay) return;
       sidebar.classList.add('active');
       mobileOverlay.classList.add('active');
       document.body.classList.add('sidebar-open');
     });
   }
   // Initialize tooltips
-  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  tooltipTriggerList.map(function(tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl);
-  });
+  if (typeof window.bootstrap !== 'undefined') {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function(tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
 
-  // Initialize popovers
-  const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-  popoverTriggerList.map(function(popoverTriggerEl) {
-    return new bootstrap.Popover(popoverTriggerEl);
-  });
+    // Initialize popovers
+    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    popoverTriggerList.map(function(popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl);
+    });
+  }
 
   // Auto-hide alerts after 5 seconds
   setTimeout(function() {
@@ -48,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
     alerts.forEach(function(alert) {
       alert.classList.add('fade');
       setTimeout(function() {
+        if (typeof window.bootstrap === 'undefined') return;
         const bsAlert = new bootstrap.Alert(alert);
         bsAlert.close();
       }, 300);
