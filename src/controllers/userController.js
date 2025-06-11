@@ -32,6 +32,52 @@ exports.registerUser = async (req, res) => {
   }
 };
 
+// Change user password
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      req.flash('error_msg', 'User not found');
+      return res.redirect('/users/profile');
+    }
+
+    const isMatch = await user.matchPassword(currentPassword || '');
+    if (!isMatch) {
+      req.flash('error_msg', 'Current password is incorrect');
+      return res.redirect('/users/profile');
+    }
+
+    if (!newPassword || newPassword.length < 10) {
+      req.flash('error_msg', 'New password must be at least 10 characters long');
+      return res.redirect('/users/profile');
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+    if (!passwordRegex.test(newPassword)) {
+      req.flash('error_msg', 'New password must include uppercase, lowercase, number, and special character');
+      return res.redirect('/users/profile');
+    }
+
+    if (newPassword !== confirmPassword) {
+      req.flash('error_msg', 'Passwords do not match');
+      return res.redirect('/users/profile');
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    req.flash('success_msg', 'Password changed successfully');
+    res.redirect('/users/profile');
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', 'An error occurred while changing password');
+    res.redirect('/users/profile');
+  }
+};
+
 // Handle user login
 exports.loginUser = (req, res, next) => {
   passport.authenticate('local', {
@@ -42,9 +88,11 @@ exports.loginUser = (req, res, next) => {
 };
 
 // Handle user logout
-exports.logoutUser = (req, res) => {
+exports.logoutUser = (req, res, next) => {
   req.logout(function(err) {
-    if (err) { return next(err); }
+    if (err) {
+      return next(err);
+    }
     req.flash('success_msg', 'You are logged out');
     res.redirect('/users/login');
   });
