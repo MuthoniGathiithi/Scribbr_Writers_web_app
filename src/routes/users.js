@@ -33,4 +33,7 @@ router.get('/profile', ensureAuthenticated, userController.getUserProfile);
 // Profile update - POST
 router.post('/profile', ensureAuthenticated, userController.updateUserProfile);
 
+// Change password - POST
+router.post('/change-password', ensureAuthenticated, userController.changePassword);
+
 module.exports = router;
