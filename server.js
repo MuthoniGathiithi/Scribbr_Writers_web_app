@@ -16,13 +16,35 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-  .then(() => console.log('MongoDB connected...'))
-  .catch(err => console.log(err));
+// Connect to MongoDB (serverless-friendly)
+let _mongoConnectionPromise;
+const connectToMongo = () => {
+  if (!process.env.MONGODB_URI) {
+    return Promise.reject(new Error('MONGODB_URI is not set'));
+  }
+
+  if (mongoose.connection.readyState === 1) {
+    return Promise.resolve(mongoose.connection);
+  }
+
+  if (_mongoConnectionPromise) {
+    return _mongoConnectionPromise;
+  }
+
+  _mongoConnectionPromise = mongoose
+    .connect(process.env.MONGODB_URI)
+    .then(() => {
+      console.log('MongoDB connected...');
+      return mongoose.connection;
+    })
+    .catch((err) => {
+      _mongoConnectionPromise = undefined;
+      console.log(err);
+      throw err;
+    });
+
+  return _mongoConnectionPromise;
+};
 
 // Passport config
 require('./src/config/passport')(passport);
@@ -36,15 +58,21 @@ app.set('views', path.join(__dirname, 'src/views'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// Ensure DB is connected when running in serverless environments
+app.use((req, res, next) => {
+  connectToMongo().then(() => next()).catch(next);
+});
+
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net'],
-      styleSrc: ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com', 'https://cdnjs.cloudflare.com'],
       imgSrc: ["'self'", 'data:', 'https://images.unsplash.com', 'https://randomuser.me', 'https://via.placeholder.com'],
       fontSrc: ["'self'", 'https://cdn.jsdelivr.net', 'https://fonts.gstatic.com'],
+      frameSrc: ["'self'", 'https://www.google.com'],
       connectSrc: ["'self'"]
     }
   }
@@ -119,4 +147,15 @@ app.use((err, req, res, next) => {
 
 // Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+if (require.main === module) {
+  connectToMongo()
+    .then(() => {
+      app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    })
+    .catch(() => {
+      process.exitCode = 1;
+    });
+}
+
+module.exports = app;
