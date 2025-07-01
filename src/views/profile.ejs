@@ -1,0 +1,263 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white">
+        <h5 class="mb-0"><i class="fas fa-user me-2"></i>My Profile</h5>
+      </div>
+      <div class="card-body">
+        <div class="row mb-4">
+          <div class="col-md-3 text-center">
+            <img src="https://via.placeholder.com/150x150" alt="Profile" class="rounded-circle img-thumbnail mb-3">
+            <div class="d-grid">
+              <button type="button" class="btn btn-sm btn-outline-primary" disabled>Change Photo</button>
+            </div>
+          </div>
+          <div class="col-md-9">
+            <form action="/users/profile" method="POST" id="profileForm" novalidate>
+              <div class="mb-3">
+                <label for="name" class="form-label">Full Name</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="name" 
+                  name="name" 
+                  value="<%= user.name %>" 
+                  required
+                >
+                <div class="invalid-feedback" id="nameError"></div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input 
+                  type="email" 
+                  class="form-control" 
+                  id="email" 
+                  value="<%= user.email %>" 
+                  disabled
+                >
+                <div class="form-text">Email address cannot be changed</div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="role" class="form-label">Account Type</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="role" 
+                  value="<%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %>" 
+                  disabled
+                >
+              </div>
+              
+              <div class="mb-3">
+                <label for="joinDate" class="form-label">Joined</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="joinDate" 
+                  value="<%= new Date(user.createdAt).toLocaleDateString() %>" 
+                  disabled
+                >
+              </div>
+              
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="/dashboard" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+        <hr>
+        
+        <div class="mt-4">
+          <h5>Change Password</h5>
+          <form action="/users/change-password" method="POST" id="passwordForm" novalidate>
+            <div class="mb-3">
+              <label for="currentPassword" class="form-label">Current Password</label>
+              <div class="input-group">
+                <input 
+                  type="password" 
+                  class="form-control" 
+                  id="currentPassword" 
+                  name="currentPassword" 
+                  required
+                >
+                <button class="btn btn-outline-secondary" type="button" id="toggleCurrentPassword">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <div class="invalid-feedback" id="currentPasswordError"></div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="newPassword" class="form-label">New Password</label>
+              <div class="input-group">
+                <input 
+                  type="password" 
+                  class="form-control" 
+                  id="newPassword" 
+                  name="newPassword" 
+                  required
+                  minlength="10"
+                >
+                <button class="btn btn-outline-secondary" type="button" id="toggleNewPassword">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <div class="invalid-feedback" id="newPasswordError"></div>
+              <div class="form-text">
+                Password must be at least 10 characters long and include uppercase, lowercase, number, and special character.
+              </div>
+              <div class="progress mt-2" style="height: 5px;">
+                <div class="progress-bar bg-danger" id="passwordStrength" role="progressbar" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirm New Password</label>
+              <div class="input-group">
+                <input 
+                  type="password" 
+                  class="form-control" 
+                  id="confirmPassword" 
+                  name="confirmPassword" 
+                  required
+                >
+                <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <div class="invalid-feedback" id="confirmPasswordError"></div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <button type="submit" class="btn btn-primary">Change Password</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Profile form validation
+    const profileForm = document.getElementById('profileForm');
+    const nameInput = document.getElementById('name');
+    
+    if (profileForm) {
+      profileForm.addEventListener('submit', function(event) {
+        let isValid = true;
+        
+        // Validate name
+        if (!nameInput.value.trim() || nameInput.value.length < 2) {
+          document.getElementById('nameError').textContent = 'Name must be at least 2 characters';
+          nameInput.classList.add('is-invalid');
+          isValid = false;
+        } else {
+          nameInput.classList.remove('is-invalid');
+        }
+        
+        if (!isValid) {
+          event.preventDefault();
+        }
+      });
+    }
+    
+    // Password form validation
+    const passwordForm = document.getElementById('passwordForm');
+    const currentPasswordInput = document.getElementById('currentPassword');
+    const newPasswordInput = document.getElementById('newPassword');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const passwordStrength = document.getElementById('passwordStrength');
+    
+    if (passwordForm) {
+      // Toggle password visibility
+      document.getElementById('toggleCurrentPassword').addEventListener('click', function() {
+        togglePasswordVisibility(currentPasswordInput, this.querySelector('i'));
+      });
+      
+      document.getElementById('toggleNewPassword').addEventListener('click', function() {
+        togglePasswordVisibility(newPasswordInput, this.querySelector('i'));
+      });
+      
+      document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+        togglePasswordVisibility(confirmPasswordInput, this.querySelector('i'));
+      });
+      
+      // Password strength meter
+      newPasswordInput.addEventListener('input', function() {
+        const password = this.value;
+        let strength = 0;
+        
+        if (password.length >= 10) strength += 25;
+        if (password.match(/[A-Z]/)) strength += 25;
+        if (password.match(/[a-z]/)) strength += 25;
+        if (password.match(/[0-9]/)) strength += 12.5;
+        if (password.match(/[^A-Za-z0-9]/)) strength += 12.5;
+        
+        passwordStrength.style.width = strength + '%';
+        
+        if (strength < 50) {
+          passwordStrength.className = 'progress-bar bg-danger';
+        } else if (strength < 75) {
+          passwordStrength.className = 'progress-bar bg-warning';
+        } else {
+          passwordStrength.className = 'progress-bar bg-success';
+        }
+      });
+      
+      passwordForm.addEventListener('submit', function(event) {
+        let isValid = true;
+        
+        // Validate current password
+        if (!currentPasswordInput.value) {
+          document.getElementById('currentPasswordError').textContent = 'Current password is required';
+          currentPasswordInput.classList.add('is-invalid');
+          isValid = false;
+        } else {
+          currentPasswordInput.classList.remove('is-invalid');
+        }
+        
+        // Validate new password
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+        if (newPasswordInput.value.length < 10 || !passwordRegex.test(newPasswordInput.value)) {
+          document.getElementById('newPasswordError').textContent = 'Password must be at least 10 characters and include uppercase, lowercase, number, and special character';
+          newPasswordInput.classList.add('is-invalid');
+          isValid = false;
+        } else {
+          newPasswordInput.classList.remove('is-invalid');
+        }
+        
+        // Validate password confirmation
+        if (newPasswordInput.value !== confirmPasswordInput.value) {
+          document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+          confirmPasswordInput.classList.add('is-invalid');
+          isValid = false;
+        } else {
+          confirmPasswordInput.classList.remove('is-invalid');
+        }
+        
+        if (!isValid) {
+          event.preventDefault();
+        }
+      });
+    }
+    
+    // Helper function to toggle password visibility
+    function togglePasswordVisibility(input, icon) {
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+  });
+</script>

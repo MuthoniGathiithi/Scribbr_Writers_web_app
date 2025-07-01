@@ -1,0 +1,65 @@
+<% if(typeof user !== 'undefined'){ %>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="d-flex align-items-center">
+      <img src="https://via.placeholder.com/50x50" alt="Profile" class="rounded-circle me-3">
+      <div>
+        <h6 class="mb-0"><%= user.name %></h6>
+        <small class="text-muted">Writer</small>
+      </div>
+    </div>
+    <button id="sidebarToggle" class="btn d-lg-none">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  
+  <div class="sidebar-menu">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a href="/dashboard" class="nav-link <%= title.includes('Dashboard') ? 'active' : '' %>">
+          <i class="fas fa-tachometer-alt me-3"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/assignments" class="nav-link <%= title.includes('Assignments') ? 'active' : '' %>">
+          <i class="fas fa-tasks me-3"></i>
+          <span>Assignments</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/training" class="nav-link <%= title.includes('Training') ? 'active' : '' %>">
+          <i class="fas fa-graduation-cap me-3"></i>
+          <span>Training</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/payments" class="nav-link <%= title.includes('Payments') ? 'active' : '' %>">
+          <i class="fas fa-money-bill-wave me-3"></i>
+          <span>Payments</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/users/profile" class="nav-link <%= title.includes('Profile') ? 'active' : '' %>">
+          <i class="fas fa-user me-3"></i>
+          <span>Profile</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/support" class="nav-link <%= title.includes('Support') ? 'active' : '' %>">
+          <i class="fas fa-headset me-3"></i>
+          <span>Support</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="sidebar-footer">
+    <a href="/users/logout" class="btn btn-outline-light w-100">
+      <i class="fas fa-sign-out-alt me-2"></i>Logout
+    </a>
+  </div>
+</div>
+
+<div class="mobile-overlay d-lg-none"></div>
+<% } %>

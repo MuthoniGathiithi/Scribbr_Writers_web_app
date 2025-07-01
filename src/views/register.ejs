@@ -1,0 +1,232 @@
+<!-- Register Page Header -->
+<div class="position-relative py-5 mb-5">
+  <!-- Background with gradient overlay -->
+  <div class="hero-bg-image"></div>
+  
+  <div class="container position-relative">
+    <div class="row">
+      <div class="col-md-8 mx-auto text-center">
+        <h1 class="display-4 fw-bold">Create Your <span class="text-gradient">Account</span></h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <!-- Payment Notice -->
+    <div class="alert alert-primary border-0 shadow-sm mb-4">
+      <div class="d-flex align-items-center">
+        <div class="flex-shrink-0">
+          <i class="fas fa-info-circle fa-2x text-gradient me-3"></i>
+        </div>
+        <div>
+          <h5 class="alert-heading">Registration Fee Required</h5>
+          <p class="mb-0">To complete your registration, a one-time payment of <strong>KES 450</strong> is required. Please make the payment via M-Pesa to Till Number: <strong>123456</strong> and include your email as the reference.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm rounded-xl">
+      <div class="card-body p-4 p-lg-5">
+        <h2 class="text-center mb-4"><i class="fas fa-user-plus text-gradient me-2"></i>Register</h2>
+        <form action="/users/register" method="POST" id="registerForm" novalidate>
+          <div class="mb-3">
+            <label for="name" class="form-label">Full Name</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-user text-gradient"></i></span>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                class="form-control"
+                placeholder="Enter your full name"
+                required
+                minlength="2"
+                maxlength="50"
+              />
+            </div>
+            <div class="invalid-feedback" id="nameError"></div>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-envelope text-gradient"></i></span>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-control"
+                placeholder="Enter your email"
+                required
+                autocomplete="email"
+              />
+            </div>
+            <div class="invalid-feedback" id="emailError"></div>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-lock text-gradient"></i></span>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-control"
+                placeholder="Enter your password (min 10 characters)"
+                required
+                minlength="10"
+                autocomplete="new-password"
+                data-password-strength="passwordStrength"
+              />
+              <button class="btn btn-outline-secondary password-toggle" type="button" id="togglePassword" data-password-input="password">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div class="invalid-feedback" id="passwordError"></div>
+            <div class="form-text mt-2">
+              Password must be at least 10 characters long and include uppercase, lowercase, number, and special character.
+            </div>
+            <div class="progress mt-2" style="height: 5px;">
+              <div class="progress-bar bg-danger" id="passwordStrength" role="progressbar" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="password2" class="form-label">Confirm Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-lock text-gradient"></i></span>
+              <input
+                type="password"
+                id="password2"
+                name="password2"
+                class="form-control"
+                placeholder="Confirm your password"
+                required
+                autocomplete="new-password"
+              />
+            </div>
+            <div class="invalid-feedback" id="password2Error"></div>
+          </div>
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="termsCheck" required>
+            <label class="form-check-label" for="termsCheck">I agree to the <a href="/privacy-policy">Terms of Service</a> and <a href="/privacy-policy">Privacy Policy</a></label>
+            <div class="invalid-feedback" id="termsError">You must agree to the terms and conditions</div>
+          </div>
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg shadow-hover"><i class="fas fa-user-plus me-2"></i>Create Account</button>
+          </div>
+        </form>
+        <hr class="my-4">
+        <div class="text-center">
+          <p>Already have an account? <a href="/users/login" class="text-decoration-none">Login here <i class="fas fa-arrow-right ms-1"></i></a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registerForm');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const password2Input = document.getElementById('password2');
+    const termsCheck = document.getElementById('termsCheck');
+    const passwordStrength = document.getElementById('passwordStrength');
+    
+    // Toggle password visibility
+    document.getElementById('togglePassword').addEventListener('click', function() {
+      const icon = this.querySelector('i');
+      
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    });
+    
+    // Password strength meter
+    passwordInput.addEventListener('input', function() {
+      const password = this.value;
+      let strength = 0;
+      
+      if (password.length >= 10) strength += 25;
+      if (password.match(/[A-Z]/)) strength += 25;
+      if (password.match(/[a-z]/)) strength += 25;
+      if (password.match(/[0-9]/)) strength += 12.5;
+      if (password.match(/[^A-Za-z0-9]/)) strength += 12.5;
+      
+      passwordStrength.style.width = strength + '%';
+      
+      if (strength < 50) {
+        passwordStrength.className = 'progress-bar bg-danger';
+      } else if (strength < 75) {
+        passwordStrength.className = 'progress-bar bg-warning';
+      } else {
+        passwordStrength.className = 'progress-bar bg-success';
+      }
+    });
+    
+    // Form validation
+    form.addEventListener('submit', function(event) {
+      let isValid = true;
+      
+      // Validate name
+      if (!nameInput.value.trim() || nameInput.value.length < 2) {
+        document.getElementById('nameError').textContent = 'Name must be at least 2 characters';
+        nameInput.classList.add('is-invalid');
+        isValid = false;
+      } else {
+        nameInput.classList.remove('is-invalid');
+      }
+      
+      // Validate email
+      const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (!emailRegex.test(emailInput.value.toLowerCase())) {
+        document.getElementById('emailError').textContent = 'Please enter a valid email address';
+        emailInput.classList.add('is-invalid');
+        isValid = false;
+      } else {
+        emailInput.classList.remove('is-invalid');
+      }
+      
+      // Validate password
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+      if (passwordInput.value.length < 10 || !passwordRegex.test(passwordInput.value)) {
+        document.getElementById('passwordError').textContent = 'Password must be at least 10 characters and include uppercase, lowercase, number, and special character';
+        passwordInput.classList.add('is-invalid');
+        isValid = false;
+      } else {
+        passwordInput.classList.remove('is-invalid');
+      }
+      
+      // Validate password confirmation
+      if (passwordInput.value !== password2Input.value) {
+        document.getElementById('password2Error').textContent = 'Passwords do not match';
+        password2Input.classList.add('is-invalid');
+        isValid = false;
+      } else {
+        password2Input.classList.remove('is-invalid');
+      }
+      
+      // Validate terms
+      if (!termsCheck.checked) {
+        termsCheck.classList.add('is-invalid');
+        isValid = false;
+      } else {
+        termsCheck.classList.remove('is-invalid');
+      }
+      
+      if (!isValid) {
+        event.preventDefault();
+      }
+    });
+  });
+</script>

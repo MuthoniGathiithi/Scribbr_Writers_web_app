@@ -1,0 +1,353 @@
+<div class="row">
+  <div class="col-md-3 mb-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body text-center">
+        <div class="mb-3">
+          <img src="https://via.placeholder.com/100x100" alt="Profile" class="rounded-circle">
+        </div>
+        <h5 class="card-title"><%= user.name %></h5>
+        <p class="card-text text-muted"><%= user.email %></p>
+        <div class="d-grid">
+          <a href="/users/profile" class="btn btn-outline-primary">Edit Profile</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card border-0 shadow-sm mt-4">
+      <div class="card-header bg-white">
+        <h5 class="mb-0">Quick Links</h5>
+      </div>
+      <div class="list-group list-group-flush">
+        <a href="/dashboard" class="list-group-item list-group-item-action">
+          <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+        </a>
+        <a href="/dashboard/training" class="list-group-item list-group-item-action active">
+          <i class="fas fa-graduation-cap me-2"></i> Training
+        </a>
+        <a href="/payments" class="list-group-item list-group-item-action">
+          <i class="fas fa-credit-card me-2"></i> Payment
+        </a>
+        <% if(user.paymentStatus === 'completed') { %>
+          <a href="/dashboard/assignments" class="list-group-item list-group-item-action">
+            <i class="fas fa-tasks me-2"></i> Assignments
+          </a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-9">
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header bg-white">
+        <h5 class="mb-0">Writer Training</h5>
+      </div>
+      <div class="card-body">
+        <% if(user.onboardingSteps.trainingCompleted) { %>
+          <div class="alert alert-success text-center">
+            <i class="fas fa-check-circle fa-3x mb-3"></i>
+            <h5>Training Completed</h5>
+            <p class="mb-0">You have successfully completed the writer training. You can now proceed with the next onboarding steps.</p>
+          </div>
+          <div class="d-grid gap-2 col-md-6 mx-auto mt-4">
+            <a href="/dashboard" class="btn btn-primary">Back to Dashboard</a>
+          </div>
+        <% } else { %>
+          <div class="alert alert-info mb-4">
+            <p class="mb-0">
+              <i class="fas fa-info-circle me-2"></i>
+              Complete the training modules below to learn about our writing standards and requirements.
+            </p>
+          </div>
+          
+          <div class="accordion" id="trainingAccordion">
+            <!-- Module 1 -->
+            <div class="accordion-item border-0 mb-3 shadow-sm">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  <i class="fas fa-book me-2"></i> Module 1: Writing Standards
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#trainingAccordion">
+                <div class="accordion-body">
+                  <h5>Our Writing Standards</h5>
+                  <p>At WriterSup, we maintain high standards for all content produced by our writers. Here are the key principles to follow:</p>
+                  
+                  <h6 class="mt-4">1. Originality</h6>
+                  <p>All content must be 100% original and free from plagiarism. We use advanced plagiarism detection tools to ensure content authenticity.</p>
+                  
+                  <h6 class="mt-3">2. Accuracy</h6>
+                  <p>Fact-check all information before including it in your writing. Use reliable sources and cite them properly when necessary.</p>
+                  
+                  <h6 class="mt-3">3. Clarity</h6>
+                  <p>Write in clear, concise language that is easy to understand. Avoid jargon unless it's appropriate for the target audience.</p>
+                  
+                  <h6 class="mt-3">4. Grammar and Spelling</h6>
+                  <p>Maintain impeccable grammar and spelling. Proofread your work thoroughly before submission.</p>
+                  
+                  <div class="form-check mt-4">
+                    <input class="form-check-input" type="checkbox" value="" id="module1Check">
+                    <label class="form-check-label" for="module1Check">
+                      I have read and understood the writing standards
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Module 2 -->
+            <div class="accordion-item border-0 mb-3 shadow-sm">
+              <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  <i class="fas fa-file-alt me-2"></i> Module 2: Content Types
+                </button>
+              </h2>
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#trainingAccordion">
+                <div class="accordion-body">
+                  <h5>Content Types</h5>
+                  <p>As a writer on our platform, you may be assigned various types of content. Here's what you need to know about each:</p>
+                  
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h6 class="card-title">Blog Posts</h6>
+                      <p class="card-text">Informative articles that provide value to readers. Usually 800-1500 words with a conversational tone.</p>
+                    </div>
+                  </div>
+                  
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h6 class="card-title">Product Descriptions</h6>
+                      <p class="card-text">Compelling descriptions that highlight product features and benefits. Usually 300-500 words with persuasive language.</p>
+                    </div>
+                  </div>
+                  
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h6 class="card-title">Email Newsletters</h6>
+                      <p class="card-text">Engaging emails that drive action. Usually 300-700 words with a clear call-to-action.</p>
+                    </div>
+                  </div>
+                  
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h6 class="card-title">Social Media Content</h6>
+                      <p class="card-text">Short, engaging posts optimized for different platforms. Length varies by platform.</p>
+                    </div>
+                  </div>
+                  
+                  <div class="form-check mt-4">
+                    <input class="form-check-input" type="checkbox" value="" id="module2Check">
+                    <label class="form-check-label" for="module2Check">
+                      I have read and understood the different content types
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Module 3 -->
+            <div class="accordion-item border-0 mb-3 shadow-sm">
+              <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  <i class="fas fa-clock me-2"></i> Module 3: Deadlines and Submissions
+                </button>
+              </h2>
+              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#trainingAccordion">
+                <div class="accordion-body">
+                  <h5>Deadlines and Submissions</h5>
+                  <p>Meeting deadlines is crucial for success on our platform. Here's what you need to know:</p>
+                  
+                  <h6 class="mt-4">1. Assignment Acceptance</h6>
+                  <p>Once you accept an assignment, you are committed to completing it by the deadline. Only accept assignments you are confident you can complete on time.</p>
+                  
+                  <h6 class="mt-3">2. Submission Process</h6>
+                  <p>Submit your completed assignments through the platform. Make sure to follow all formatting guidelines provided in the assignment brief.</p>
+                  
+                  <h6 class="mt-3">3. Revisions</h6>
+                  <p>You may be asked to revise your work based on client feedback. Revisions should be completed within 24 hours of the request.</p>
+                  
+                  <h6 class="mt-3">4. Late Submissions</h6>
+                  <p>Late submissions may result in reduced payment or removal from the assignment. If you anticipate a delay, contact support immediately.</p>
+                  
+                  <div class="form-check mt-4">
+                    <input class="form-check-input" type="checkbox" value="" id="module3Check">
+                    <label class="form-check-label" for="module3Check">
+                      I have read and understood the deadline and submission policies
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Quiz -->
+            <div class="accordion-item border-0 shadow-sm">
+              <h2 class="accordion-header" id="headingFour">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                  <i class="fas fa-question-circle me-2"></i> Module 4: Knowledge Check
+                </button>
+              </h2>
+              <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#trainingAccordion">
+                <div class="accordion-body">
+                  <h5>Knowledge Check</h5>
+                  <p>Complete this quick quiz to test your understanding of our writing standards and policies.</p>
+                  
+                  <form id="quizForm">
+                    <div class="mb-4">
+                      <p class="fw-bold">1. What is our policy on plagiarism?</p>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="question1" id="q1a" value="a">
+                        <label class="form-check-label" for="q1a">
+                          Up to 10% plagiarism is acceptable
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="question1" id="q1b" value="b">
+                        <label class="form-check-label" for="q1b">
+                          All content must be 100% original
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="question1" id="q1c" value="c">
+                        <label class="form-check-label" for="q1c">
+                          Plagiarism is only checked for client-facing content
+                        </label>
+                      </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                      <p class="fw-bold">2. How long do you have to complete revisions after receiving feedback?</p>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="question2" id="q2a" value="a">
+                        <label class="form-check-label" for="q2a">
+                          48 hours
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="question2" id="q2b" value="b">
+                        <label class="form-check-label" for="q2b">
+                          24 hours
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="question2" id="q2c" value="c">
+                          <label class="form-check-label" for="q2c">
+                          72 hours
+                        </label>
+                      </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                      <p class="fw-bold">3. What should you do if you anticipate missing a deadline?</p>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="question3" id="q3a" value="a">
+                        <label class="form-check-label" for="q3a">
+                          Submit what you have completed by the deadline
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="question3" id="q3b" value="b">
+                        <label class="form-check-label" for="q3b">
+                          Contact support immediately
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="question3" id="q3c" value="c">
+                        <label class="form-check-label" for="q3c">
+                          Wait until you can submit the completed assignment
+                        </label>
+                      </div>
+                    </div>
+                    
+                    <div id="quizResult" class="alert d-none mb-4"></div>
+                    
+                    <button type="button" id="checkAnswers" class="btn btn-primary">Check Answers</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <form action="/dashboard/training/complete" method="POST" id="completeTrainingForm" class="mt-4">
+            <div class="d-grid gap-2 col-md-6 mx-auto">
+              <button type="submit" id="completeTraining" class="btn btn-success" disabled>
+                Complete Training
+              </button>
+            </div>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const module1Check = document.getElementById('module1Check');
+    const module2Check = document.getElementById('module2Check');
+    const module3Check = document.getElementById('module3Check');
+    const checkAnswersBtn = document.getElementById('checkAnswers');
+    const completeTrainingBtn = document.getElementById('completeTraining');
+    const quizResult = document.getElementById('quizResult');
+    let quizPassed = false;
+    
+    // Function to check if all modules are completed
+    function checkModulesCompleted() {
+      if (module1Check && module2Check && module3Check) {
+        const allChecked = module1Check.checked && module2Check.checked && module3Check.checked;
+        
+        if (allChecked && quizPassed) {
+          completeTrainingBtn.disabled = false;
+        } else {
+          completeTrainingBtn.disabled = true;
+        }
+      }
+    }
+    
+    // Add event listeners to checkboxes
+    if (module1Check) module1Check.addEventListener('change', checkModulesCompleted);
+    if (module2Check) module2Check.addEventListener('change', checkModulesCompleted);
+    if (module3Check) module3Check.addEventListener('change', checkModulesCompleted);
+    
+    // Quiz validation
+    if (checkAnswersBtn) {
+      checkAnswersBtn.addEventListener('click', function() {
+        const q1Answer = document.querySelector('input[name="question1"]:checked')?.value;
+        const q2Answer = document.querySelector('input[name="question2"]:checked')?.value;
+        const q3Answer = document.querySelector('input[name="question3"]:checked')?.value;
+        
+        if (!q1Answer || !q2Answer || !q3Answer) {
+          quizResult.textContent = 'Please answer all questions.';
+          quizResult.classList.remove('d-none', 'alert-success');
+          quizResult.classList.add('alert-danger');
+          return;
+        }
+        
+        // Check answers (correct answers: b, b, b)
+        const correctAnswers = {
+          question1: 'b',
+          question2: 'b',
+          question3: 'b'
+        };
+        
+        const score = [
+          q1Answer === correctAnswers.question1,
+          q2Answer === correctAnswers.question2,
+          q3Answer === correctAnswers.question3
+        ].filter(Boolean).length;
+        
+        if (score === 3) {
+          quizResult.textContent = 'Congratulations! You passed the quiz.';
+          quizResult.classList.remove('d-none', 'alert-danger');
+          quizResult.classList.add('alert-success');
+          quizPassed = true;
+        } else {
+          quizResult.textContent = `You got ${score} out of 3 questions correct. Please review the training materials and try again.`;
+          quizResult.classList.remove('d-none', 'alert-success');
+          quizResult.classList.add('alert-danger');
+          quizPassed = false;
+        }
+        
+        checkModulesCompleted();
+      });
+    }
+  });
+</script>
